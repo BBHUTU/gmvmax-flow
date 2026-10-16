@@ -718,26 +718,24 @@
         </div>
       </div>
 
-      <div class="cards split">
-        <article class="card card-split">
-          <div class="card-main">
-            <div class="card-header">
-              <div class="card-badge">1</div>
-              <div>
-                <h3>TikTok 视频链接自动补全</h3>
-                <p class="sub">已对接账号主页抓取，定时自动触发</p>
-              </div>
+      <div class="cards">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-badge">1</div>
+            <div>
+              <h3>TikTok 视频链接自动补全</h3>
+              <p class="sub">已对接账号主页抓取，定时自动触发</p>
             </div>
-            <ul>
-              <li><strong>自动启动：</strong>每 5 分钟扫描新链接，每 30 分钟刷新播放/点赞，GitHub Actions 云端兜底</li>
-              <li><strong>抓取账号主页：</strong>按表中 TikTok 账号逐一下滑主页，抓取最新视频标题、ID、发布时间</li>
-              <li><strong>标题/日期匹配：</strong>按「账号 + 标题相似度 72% + 发布日期 28%」打分，全局唯一分配</li>
-              <li><strong>写入飞书表：</strong>自动回填 TikTok 链接、状态、标题、播放量、点赞数；置信度不够留空</li>
-              <li><strong>报告结果：</strong>状态列显示「已补全 / 需人工确认 / 未找到」，提示列写原因和候选链接</li>
-            </ul>
-            <span class="status-pill">已上线 · 每日执行</span>
           </div>
-          <div class="card-media">
+          <ul>
+            <li><strong>自动启动：</strong>每 5 分钟扫描新链接，每 30 分钟刷新播放/点赞，GitHub Actions 云端兜底</li>
+            <li><strong>抓取账号主页：</strong>按表中 TikTok 账号逐一下滑主页，抓取最新视频标题、ID、发布时间</li>
+            <li><strong>标题/日期匹配：</strong>按「账号 + 标题相似度 72% + 发布日期 28%」打分，全局唯一分配</li>
+            <li><strong>写入飞书表：</strong>自动回填 TikTok 链接、状态、标题、播放量、点赞数；置信度不够留空</li>
+            <li><strong>报告结果：</strong>状态列显示「已补全 / 需人工确认 / 未找到」，提示列写原因和候选链接</li>
+          </ul>
+          <span class="status-pill">已上线 · 每日执行</span>
+          <div class="screenshot">
             <img src="images/tiktok_link_table.png" alt="TikTok 链接补全结果表格" />
           </div>
         </article>
