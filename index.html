@@ -238,6 +238,45 @@
     /* 单卡片实例：限宽居中，避免截图被过度放大 */
     .cards.single { max-width: 560px; margin-inline: auto; }
 
+    /* 左右分栏卡片（实例02）：左文右图，截图 cover 上半部分 */
+    .cards.split { grid-template-columns: 1fr; }
+
+    .card-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: stretch;
+      padding: 0;
+      min-height: 320px;
+    }
+
+    .card-split .card-main {
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-split .card-main ul { flex: 1; }
+
+    .card-split .card-media {
+      position: relative;
+      min-height: 320px;
+      overflow: hidden;
+      background: rgba(0,0,0,0.3);
+    }
+
+    .card-split .card-media img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      border-radius: 0 20px 20px 0;
+      transition: transform 0.35s ease;
+    }
+
+    .card-split:hover .card-media img { transform: scale(1.03); }
+
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border);
@@ -371,6 +410,9 @@
       .pipeline::before { display: none; }
       .cards { grid-template-columns: 1fr; }
       .toc { display: none; }
+      .card-split { grid-template-columns: 1fr; }
+      .card-split .card-media { min-height: 240px; border-radius: 0 0 20px 20px; }
+      .card-split .card-media img { border-radius: 0 0 20px 20px; }
     }
 
     footer {
@@ -528,24 +570,26 @@
         </div>
       </div>
 
-      <div class="cards single">
-        <article class="card">
-          <div class="card-header">
-            <div class="card-badge">1</div>
-            <div>
-              <h3>余额播报与充值提醒</h3>
-              <p class="sub">每日 09:27 自动发送，无需人工触发</p>
+      <div class="cards split">
+        <article class="card card-split">
+          <div class="card-main">
+            <div class="card-header">
+              <div class="card-badge">1</div>
+              <div>
+                <h3>余额播报与充值提醒</h3>
+                <p class="sub">每日 09:27 自动发送，无需人工触发</p>
+              </div>
             </div>
+            <ul>
+              <li><strong>监控对象：</strong>US-DrBioCare、MX-BioCare 两个账户（USD）</li>
+              <li><strong>告警规则：</strong>余额 &lt; 近 7 天日均消耗 × 16 天</li>
+              <li><strong>告警内容：</strong>剩余余额、可支撑天数、建议充值金额</li>
+              <li><strong>节假日适配：</strong>周末、节假日自动上浮余量</li>
+              <li><strong>送达方式：</strong>飞书机器人推送</li>
+            </ul>
+            <span class="status-pill">已上线 · 每日 09:27 播报</span>
           </div>
-          <ul>
-            <li><strong>监控对象：</strong>US-DrBioCare、MX-BioCare 两个账户（USD）</li>
-            <li><strong>告警规则：</strong>余额 &lt; 近 7 天日均消耗 × 16 天</li>
-            <li><strong>告警内容：</strong>剩余余额、可支撑天数、建议充值金额</li>
-            <li><strong>节假日适配：</strong>周末、节假日自动上浮余量</li>
-            <li><strong>送达方式：</strong>飞书机器人推送</li>
-          </ul>
-          <span class="status-pill">已上线 · 每日 09:27 播报</span>
-          <div class="screenshot">
+          <div class="card-media">
             <img src="images/balance_msg.png" alt="账户余额播报截图" />
           </div>
         </article>
