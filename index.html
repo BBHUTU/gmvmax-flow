@@ -3,17 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GMV Max 数据流 · 从导出到日报周报</title>
-  <meta name="description" content="从 TikTok 后台自动导出，到底表沉淀，再到日报 / 周报自动推送的完整链路" />
+  <title>AI 自动化实例集 · 投放工作流</title>
+  <meta name="description" content="三个已落地的 AI 自动化实例：账户余额监控、GMV Max 数据流、创意脚本读取" />
   <style>
     :root {
       --bg: #030712;
-      --bg-card: rgba(17, 24, 39, 0.7);
+      --bg-card: rgba(17, 24, 39, 0.75);
       --border: rgba(56, 189, 248, 0.2);
       --cyan: #22d3ee;
       --blue: #3b82f6;
       --violet: #8b5cf6;
       --green: #10b981;
+      --amber: #f59e0b;
       --text: #f3f4f6;
       --text-dim: #94a3b8;
     }
@@ -25,18 +26,17 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      line-height: 1.65;
       overflow-x: hidden;
     }
 
-    /* 背景网格 */
     .bg-grid {
       position: fixed;
       inset: 0;
       background-image:
-        linear-gradient(rgba(34, 211, 238, 0.05) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(34, 211, 238, 0.05) 1px, transparent 1px);
-      background-size: 60px 60px;
+        linear-gradient(rgba(34, 211, 238, 0.045) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34, 211, 238, 0.045) 1px, transparent 1px);
+      background-size: 64px 64px;
       mask-image: radial-gradient(circle at 50% 0%, black, transparent 80%);
       -webkit-mask-image: radial-gradient(circle at 50% 0%, black, transparent 80%);
       z-index: -2;
@@ -45,27 +45,27 @@
 
     .bg-glow {
       position: fixed;
-      width: 600px;
-      height: 600px;
+      width: 680px;
+      height: 680px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(34,211,238,0.18), transparent 60%);
-      top: -200px;
+      background: radial-gradient(circle, rgba(34,211,238,0.16), transparent 62%);
+      top: -240px;
       left: 50%;
       transform: translateX(-50%);
       z-index: -1;
-      filter: blur(60px);
+      filter: blur(70px);
       pointer-events: none;
     }
 
     header {
       text-align: center;
-      padding: 72px 20px 40px;
+      padding: 72px 20px 16px;
     }
 
     header h1 {
-      font-size: 42px;
+      font-size: 44px;
       font-weight: 800;
-      margin: 0 0 12px;
+      margin: 0 0 14px;
       background: linear-gradient(135deg, var(--cyan), var(--blue), var(--violet));
       -webkit-background-clip: text;
       background-clip: text;
@@ -74,119 +74,74 @@
     }
 
     header p {
-      font-size: 18px;
+      font-size: 17px;
       color: var(--text-dim);
       margin: 0 auto;
-      max-width: 620px;
+      max-width: 560px;
     }
 
     .container {
-      max-width: 1080px;
+      max-width: 960px;
       margin: 0 auto;
-      padding: 20px 24px 80px;
+      padding: 20px 22px 80px;
     }
 
-    /* 流程主线 */
-    .pipeline {
+    /* 实例导航 */
+    .toc {
       display: flex;
-      align-items: stretch;
-      justify-content: space-between;
-      gap: 16px;
-      margin: 48px 0 64px;
-      position: relative;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 28px 0 40px;
     }
 
-    .pipeline::before {
-      content: "";
-      position: absolute;
-      top: 36px;
-      left: 12%;
-      right: 12%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--cyan), var(--blue), var(--violet), transparent);
-      z-index: 0;
-      opacity: 0.6;
+    .toc a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.2s ease;
     }
 
-    .node {
-      flex: 1;
-      min-width: 0;
-      position: relative;
-      z-index: 1;
-      text-align: center;
+    .toc a:hover {
+      color: var(--text);
+      border-color: var(--cyan);
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.15);
     }
 
-    .node-icon {
-      width: 72px;
-      height: 72px;
+    .toc a span {
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
-      margin: 0 auto 16px;
+      background: rgba(34, 211, 238, 0.12);
+      color: var(--cyan);
       display: grid;
       place-items: center;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      box-shadow: 0 0 24px rgba(34, 211, 238, 0.15);
-      font-size: 28px;
-    }
-
-    .node-title {
+      font-size: 12px;
       font-weight: 700;
-      font-size: 16px;
-      margin-bottom: 6px;
-      color: var(--text);
     }
 
-    .node-desc {
-      font-size: 13px;
-      color: var(--text-dim);
-      padding: 0 8px;
-    }
-
-    /* 卡片区 */
-    .section-title {
-      font-size: 13px;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: var(--cyan);
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .section-title::before {
-      content: "";
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
-    }
-
-    .cards {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 24px;
-    }
-
-    .card {
+    /* 实例区块 */
+    .case {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 28px;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      border-radius: 24px;
+      padding: 36px;
+      margin-bottom: 40px;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       position: relative;
       overflow: hidden;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      scroll-margin-top: 24px;
     }
 
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 48px rgba(34, 211, 238, 0.12);
-    }
-
-    .card::after {
+    .case::after {
       content: "";
       position: absolute;
       top: 0;
@@ -194,69 +149,46 @@
       right: 0;
       height: 2px;
       background: linear-gradient(90deg, var(--cyan), var(--blue));
-      opacity: 0.6;
+      opacity: 0.7;
     }
 
-    .card-header {
+    .case-header {
       display: flex;
-      align-items: center;
-      gap: 14px;
-      margin-bottom: 18px;
+      align-items: flex-start;
+      gap: 18px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
     }
 
-    .card-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+    .case-number {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      background: rgba(34, 211, 238, 0.1);
-      border: 1px solid rgba(34, 211, 238, 0.3);
-      font-size: 18px;
-      flex-shrink: 0;
+      background: linear-gradient(135deg, rgba(34,211,238,0.18), rgba(59,130,246,0.18));
+      border: 1px solid rgba(34, 211, 238, 0.35);
       color: var(--cyan);
+      font-size: 22px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .case-title {
+      flex: 1;
+      min-width: 220px;
+    }
+
+    .case-title h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
       font-weight: 700;
     }
 
-    .card h3 {
+    .case-title .tagline {
       margin: 0;
-      font-size: 20px;
-      font-weight: 700;
-    }
-
-    .card p.sub {
-      margin: 4px 0 0;
       color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    .card ul {
-      margin: 16px 0 0;
-      padding-left: 18px;
-      color: var(--text-dim);
-      font-size: 14px;
-    }
-
-    .card li {
-      margin-bottom: 8px;
-    }
-
-    .card li strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    .screenshot {
-      margin-top: 20px;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      background: rgba(0,0,0,0.3);
-    }
-
-    .screenshot img {
-      width: 100%;
-      display: block;
+      font-size: 15px;
     }
 
     .status-pill {
@@ -265,12 +197,12 @@
       gap: 6px;
       font-size: 12px;
       font-weight: 600;
-      padding: 5px 10px;
+      padding: 5px 12px;
       border-radius: 999px;
       background: rgba(16, 185, 129, 0.12);
       color: var(--green);
       border: 1px solid rgba(16, 185, 129, 0.25);
-      margin-top: 14px;
+      white-space: nowrap;
     }
 
     .status-pill::before {
@@ -288,11 +220,161 @@
       50% { opacity: 0.5; transform: scale(1.2); }
     }
 
-    @media (max-width: 760px) {
-      header h1 { font-size: 30px; }
-      .pipeline { flex-direction: column; gap: 32px; }
-      .pipeline::before { display: none; }
-      .cards { grid-template-columns: 1fr; }
+    .scope {
+      background: rgba(34, 211, 238, 0.06);
+      border-left: 3px solid var(--cyan);
+      padding: 14px 18px;
+      border-radius: 0 12px 12px 0;
+      color: var(--text-dim);
+      font-size: 14px;
+      margin-bottom: 22px;
+    }
+
+    .scope strong {
+      color: var(--text);
+    }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin: 26px 0 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::before {
+      content: "";
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    ol.flow {
+      margin: 0;
+      padding-left: 22px;
+    }
+
+    ol.flow li {
+      margin-bottom: 12px;
+      padding-left: 8px;
+    }
+
+    ol.flow li strong {
+      color: var(--text);
+      display: block;
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    ol.flow li span {
+      color: var(--text-dim);
+      font-size: 14px;
+    }
+
+    table.specs {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    table.specs th,
+    table.specs td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    table.specs th {
+      width: 110px;
+      color: var(--text-dim);
+      font-weight: 600;
+      background: rgba(255,255,255,0.02);
+    }
+
+    table.specs tr:last-child th,
+    table.specs tr:last-child td {
+      border-bottom: none;
+    }
+
+    .screenshot {
+      margin-top: 18px;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: rgba(0,0,0,0.35);
+    }
+
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+
+    .screenshot-caption {
+      padding: 10px 14px;
+      font-size: 12px;
+      color: var(--text-dim);
+      background: rgba(255,255,255,0.02);
+      border-top: 1px solid rgba(148, 163, 184, 0.1);
+    }
+
+    .pipeline {
+      display: flex;
+      align-items: stretch;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 24px 0 10px;
+      position: relative;
+    }
+
+    .pipeline::before {
+      content: "";
+      position: absolute;
+      top: 32px;
+      left: 10%;
+      right: 10%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--blue), var(--violet), transparent);
+      opacity: 0.55;
+      z-index: 0;
+    }
+
+    .node {
+      flex: 1;
+      min-width: 0;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+
+    .node-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 0 auto 12px;
+      display: grid;
+      place-items: center;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      box-shadow: 0 0 20px rgba(34, 211, 238, 0.12);
+      font-size: 24px;
+    }
+
+    .node-title {
+      font-weight: 700;
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: var(--text);
+    }
+
+    .node-desc {
+      font-size: 12px;
+      color: var(--text-dim);
+      padding: 0 4px;
     }
 
     footer {
@@ -301,6 +383,15 @@
       color: var(--text-dim);
       font-size: 13px;
     }
+
+    @media (max-width: 760px) {
+      header h1 { font-size: 30px; }
+      .case { padding: 24px; }
+      .case-title h2 { font-size: 21px; }
+      .pipeline { flex-direction: column; gap: 26px; margin-bottom: 6px; }
+      .pipeline::before { display: none; }
+      .toc { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -308,105 +399,172 @@
   <div class="bg-glow"></div>
 
   <header>
-    <h1>GMV Max 数据流</h1>
-    <p>从 TikTok 后台自动导出，到底表沉淀，再到日报 / 周报自动推送的完整链路</p>
+    <h1>AI 自动化实例集</h1>
+    <p>三个已落地的投放工作流：从监控、取数到内容处理，每天自动跑</p>
   </header>
 
   <div class="container">
-    <!-- 流程主线 -->
-    <div class="pipeline">
-      <div class="node">
-        <div class="node-icon">🚀</div>
-        <div class="node-title">TikTok 后台</div>
-        <div class="node-desc">定时读取 GMV Max 原始数据</div>
-      </div>
-      <div class="node">
-        <div class="node-icon">⚙️</div>
-        <div class="node-title">自动导出</div>
-        <div class="node-desc">美区 / 墨区双账号并行处理</div>
-      </div>
-      <div class="node">
-        <div class="node-icon">🗂️</div>
-        <div class="node-title">飞书底表</div>
-        <div class="node-desc">按天累积形成标准化台账</div>
-      </div>
-      <div class="node">
-        <div class="node-icon">📊</div>
-        <div class="node-title">日报 / 周报</div>
-        <div class="node-desc">自动汇总、计算 ROAS 并推送</div>
-      </div>
-    </div>
+    <nav class="toc">
+      <a href="#balance"><span>1</span>账户余额监控</a>
+      <a href="#gmvmax"><span>2</span>GMV Max 数据流</a>
+      <a href="#script"><span>3</span>创意脚本读取</a>
+    </nav>
 
-    <!-- 模块卡片 -->
-    <div class="section-title">核心环节</div>
-    <div class="cards">
-      <article class="card">
-        <div class="card-header">
-          <div class="card-badge">1</div>
-          <div>
-            <h3>GMV Max 数据导出</h3>
-            <p class="sub">每日自动导出并写入飞书底表</p>
-          </div>
+    <!-- 实例 1：账户余额监控 -->
+    <section class="case" id="balance">
+      <div class="case-header">
+        <div class="case-number">1</div>
+        <div class="case-title">
+          <h2>账户余额监控</h2>
+          <p class="tagline">每天自动检查两个广告账户还剩多少钱、能撑几天，不够了提前提醒充值</p>
         </div>
-        <ul>
-          <li><strong>自动启动：</strong>每天定时运行，无需人工登录后台</li>
-          <li><strong>分账号导出：</strong>美区 DrBioCare + 墨区 BIOCARE 双账号并行</li>
-          <li><strong>整理格式：</strong>按底表字段顺序对齐，保持历史数据一致</li>
-          <li><strong>写入台账：</strong>追加到《GMVMAX后台数据》表，按天累积</li>
-          <li><strong>报告结果：</strong>推送「美区 X 条 / 墨区 X 条」</li>
-        </ul>
+        <span class="status-pill">已上线 · 每日 09:27 播报</span>
+      </div>
+
+      <div class="scope"><strong>适用范围：</strong>及时监控并提醒 TikTok 广告后台余额，防止余额不足导致投放中断。</div>
+
+      <div class="section-label">流程逻辑</div>
+      <ol class="flow">
+        <li><strong>读取账户余额</strong><span>自动拉取 US 和 MX 两个广告账户的当前余额</span></li>
+        <li><strong>算日均消耗</strong><span>取近 7 天的平均每天花多少钱</span></li>
+        <li><strong>算安全线</strong><span>日均消耗 × 16 天；遇到周末、节假日自动上浮，多留余量</span></li>
+        <li><strong>判断是否够</strong><span>余额低于安全线就判定为不足</span></li>
+        <li><strong>推送播报</strong><span>每天发余额日报；不足时额外告警，直接给出还能撑几天、建议充多少</span></li>
+      </ol>
+
+      <div class="section-label">功能参数</div>
+      <table class="specs">
+        <tr><th>监控对象</th><td>US-DrBioCare、MX-BioCare 两个账户（USD）</td></tr>
+        <tr><th>播报时间</th><td>每日 09:27 自动发送，无需人工触发</td></tr>
+        <tr><th>告警规则</th><td>余额 &lt; 近 7 天日均消耗 × 16 天</td></tr>
+        <tr><th>告警内容</th><td>剩余余额、可支撑天数、建议充值金额</td></tr>
+        <tr><th>送达方式</th><td>飞书机器人推送</td></tr>
+      </table>
+
+      <div class="section-label">实际运行截图</div>
+      <div class="screenshot">
+        <img src="images/balance_msg.png" alt="账户余额播报截图" />
+        <div class="screenshot-caption">TikTok 每日余额播报：US 余额充足 / MX 余额不足并给出建议充值金额</div>
+      </div>
+    </section>
+
+    <!-- 实例 2：GMV Max 数据流 -->
+    <section class="case" id="gmvmax">
+      <div class="case-header">
+        <div class="case-number">2</div>
+        <div class="case-title">
+          <h2>GMV Max 数据流</h2>
+          <p class="tagline">从 TikTok 后台自动导出，到底表沉淀，再到日报 / 周报自动推送</p>
+        </div>
         <span class="status-pill">已上线 · 每日执行</span>
-        <div class="screenshot">
-          <img src="images/export.png" alt="GMV 导出运行截图" />
-        </div>
-      </article>
+      </div>
 
-      <article class="card">
-        <div class="card-header">
-          <div class="card-badge">2</div>
-          <div>
-            <h3>日报自动播报</h3>
-            <p class="sub">每天下午汇总当日投放数据</p>
-          </div>
-        </div>
-        <ul>
-          <li><strong>读取底表：</strong>从《GMVMAX后台数据》取当日数据</li>
-          <li><strong>品类归集：</strong>按摩霜、泡腾片、牙膏、大促等关键词自动分类</li>
-          <li><strong>计算 ROAS：</strong>GMV ÷ 消耗，按市场 / 品类自动汇总</li>
-          <li><strong>异常处理：</strong>当天无数据自动跳过，不产生空行</li>
-          <li><strong>定时推送：</strong>飞书机器人自动发到业务群</li>
-        </ul>
-        <span class="status-pill">已上线 · 每日播报</span>
-        <div class="screenshot">
-          <img src="images/daily.png" alt="日报运行截图" />
-        </div>
-      </article>
+      <div class="scope"><strong>适用范围：</strong>每日自动导出 GMV Max 数据、沉淀成台账，并基于台账自动生成日报与周报，全程无需手动汇总。</div>
 
-      <article class="card">
-        <div class="card-header">
-          <div class="card-badge">3</div>
-          <div>
-            <h3>周报自动汇总</h3>
-            <p class="sub">每周一汇总上周全量数据</p>
-          </div>
+      <div class="pipeline">
+        <div class="node">
+          <div class="node-icon">🚀</div>
+          <div class="node-title">TikTok 后台</div>
+          <div class="node-desc">定时读取 GMV Max 原始数据</div>
         </div>
-        <ul>
-          <li><strong>周度范围：</strong>每周一自动统计上周一至周日</li>
-          <li><strong>市场总览：</strong>美区 / 墨区总消耗、总 ROAS</li>
-          <li><strong>品类拆解：</strong>牙贴、泡腾片、牙膏等分品表现</li>
-          <li><strong>防重发机制：</strong>独立状态文件，避免重复推送</li>
-          <li><strong>周一触达：</strong>固定时间自动发到业务群</li>
-        </ul>
-        <span class="status-pill">已上线 · 每周一执行</span>
-        <div class="screenshot">
-          <img src="images/weekly.png" alt="周报运行截图" />
+        <div class="node">
+          <div class="node-icon">⚙️</div>
+          <div class="node-title">自动导出</div>
+          <div class="node-desc">美区 / 墨区双账号并行处理</div>
         </div>
-      </article>
-    </div>
+        <div class="node">
+          <div class="node-icon">🗂️</div>
+          <div class="node-title">飞书底表</div>
+          <div class="node-desc">按天累积形成标准化台账</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">📊</div>
+          <div class="node-title">日报 / 周报</div>
+          <div class="node-desc">自动汇总、计算 ROAS 并推送</div>
+        </div>
+      </div>
+
+      <div class="section-label">流程逻辑</div>
+      <ol class="flow">
+        <li><strong>每日自动导出</strong><span>定时拉取美区 DrBioCare 和墨区 BIOCARE 的 GMV Max 数据</span></li>
+        <li><strong>整理写入底表</strong><span>按字段格式对齐后追加到《GMVMAX后台数据》表，形成按天累积的台账</span></li>
+        <li><strong>生成日报</strong><span>每天下午读取当日数据，按品类自动归类、计算 ROAS，推送到业务群</span></li>
+        <li><strong>生成周报</strong><span>每周一汇总上周一至周日数据，给出市场总览和品类拆解</span></li>
+        <li><strong>异常处理</strong><span>当天无数据或品类未匹配时自动跳过，并如实报告</span></li>
+      </ol>
+
+      <div class="section-label">功能参数</div>
+      <table class="specs">
+        <tr><th>数据来源</th><td>TikTok 广告后台 GMV Max（含 VSA 数据）</td></tr>
+        <tr><th>覆盖账号</th><td>美区 DrBioCare + 墨区 BIOCARE，双账号并行</td></tr>
+        <tr><th>写入位置</th><td>飞书《GMVMAX后台数据》表格</td></tr>
+        <tr><th>日报推送</th><td>每天下午自动发送当日 GMV / 消耗 / ROAS</td></tr>
+        <tr><th>周报推送</th><td>每周一汇总上周全量数据</td></tr>
+        <tr><th>送达方式</th><td>飞书机器人推送到业务群</td></tr>
+      </table>
+
+      <div class="section-label">实际运行截图</div>
+      <div class="screenshot">
+        <img src="images/export.png" alt="GMV Max 数据导出截图" />
+        <div class="screenshot-caption">每日导出结果：美区 1 条 / 墨区 5 条，VSA 无数据自动跳过</div>
+      </div>
+      <div class="screenshot">
+        <img src="images/daily.png" alt="日报截图" />
+        <div class="screenshot-caption">日报样例：10 月月度累计 + 当日美区 / 墨区明细</div>
+      </div>
+      <div class="screenshot">
+        <img src="images/weekly.png" alt="周报截图" />
+        <div class="screenshot-caption">周报样例：墨区总消耗、总 ROAS 及牙贴 / 泡腾片 / 牙膏拆解</div>
+      </div>
+    </section>
+
+    <!-- 实例 3：创意脚本读取 -->
+    <section class="case" id="script">
+      <div class="case-header">
+        <div class="case-number">3</div>
+        <div class="case-title">
+          <h2>创意脚本读取</h2>
+          <p class="tagline">把视频链接自动变成中英对照脚本，人只需要把链接填进表格</p>
+        </div>
+        <span class="status-pill">已上线 · 有链接就自动触发</span>
+      </div>
+
+      <div class="scope"><strong>适用范围：</strong>批量提取 TikTok 竞品/精品视频的中英对照脚本，用于素材库沉淀和二次创作参考。</div>
+
+      <div class="section-label">流程逻辑</div>
+      <ol class="flow">
+        <li><strong>填链接</strong><span>在飞书「脚本读取」表 A 列入 TikTok 视频链接（全流程唯一要人动手的一步）</span></li>
+        <li><strong>自动触发</strong><span>表格里一有新链接就自动开始跑，不用等定时、不用人点</span></li>
+        <li><strong>抓视频</strong><span>逐个打开链接，把视频内容抓下来</span></li>
+        <li><strong>转写原文</strong><span>把口播内容转成文字，写回同一行的 B 列「原文提取」</span></li>
+        <li><strong>翻译输出</strong><span>自动生成中文，写回同一行的 C 列「译文」</span></li>
+        <li><strong>推送通知</strong><span>提取完成后发结果通知：待处理 / 成功 / 失败 / 写回单元格数</span></li>
+      </ol>
+
+      <div class="section-label">功能参数</div>
+      <table class="specs">
+        <tr><th>输入</th><td>飞书表格 A 列的视频链接</td></tr>
+        <tr><th>处理</th><td>视频采集 → 脚本转写 → 翻译</td></tr>
+        <tr><th>输出</th><td>同行 B 列原文、C 列译文，链接和脚本对得上</td></tr>
+        <tr><th>触发方式</th><td>有新链接就自动触发，云端执行，不依赖电脑开机</td></tr>
+        <tr><th>失败处理</th><td>失败行会在下次运行时自动重试</td></tr>
+        <tr><th>送达方式</th><td>完成后飞书机器人推送</td></tr>
+      </table>
+
+      <div class="section-label">实际运行截图</div>
+      <div class="screenshot">
+        <img src="images/script_table.png" alt="脚本读取结果表格" />
+        <div class="screenshot-caption">脚本读取结果：A 列原链接，B 列英文原文，C 列中文翻译</div>
+      </div>
+      <div class="screenshot">
+        <img src="images/script_notify.png" alt="脚本提取通知" />
+        <div class="screenshot-caption">提取完成通知：96 行待处理，67 行成功，失败行自动重试</div>
+      </div>
+    </section>
   </div>
 
   <footer>
-    数据从后台自动流出 → 经过标准化处理 → 变成每天可读的播报
+    把重复的事情交给自动化，人工只负责决策和异常处理
   </footer>
 </body>
 </html>
