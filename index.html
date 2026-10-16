@@ -436,6 +436,7 @@
     <a href="#gmvmax"><b>01</b>GMV Max 数据流</a>
     <a href="#balance"><b>02</b>账户余额监控</a>
     <a href="#script"><b>03</b>创意脚本读取</a>
+    <a href="#tiktok"><b>04</b>TK 链接自动补全</a>
   </nav>
 
   <div class="container">
@@ -674,6 +675,70 @@
           <span class="status-pill">已上线 · 自动推送</span>
           <div class="screenshot">
             <img src="images/script_notify.png" alt="脚本提取通知" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 实例 04：TikTok 视频链接自动补全 -->
+    <section class="case" id="tiktok">
+      <div class="case-head">
+        <div class="case-index">实例 04</div>
+        <h2>TikTok 视频链接自动补全</h2>
+        <p>每天自动把已发布的 TikTok 视频链接抓回来、匹配好，写进飞书表格</p>
+      </div>
+
+      <div class="pipeline">
+        <div class="node">
+          <div class="node-icon">⚡</div>
+          <div class="node-title">自动启动</div>
+          <div class="node-desc">5 分钟扫描 + 30 分钟刷新</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🕵️</div>
+          <div class="node-title">抓取主页</div>
+          <div class="node-desc">下滑账号主页抓最新视频</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🧩</div>
+          <div class="node-title">标题/日期匹配</div>
+          <div class="node-desc">按相似度 + 日期打分</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">📝</div>
+          <div class="node-title">写入飞书表</div>
+          <div class="node-desc">回填链接、播放、点赞</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">✅</div>
+          <div class="node-title">报告结果</div>
+          <div class="node-desc">状态列显示处理结果</div>
+        </div>
+      </div>
+
+      <div class="cards split">
+        <article class="card card-split">
+          <div class="card-main">
+            <div class="card-header">
+              <div class="card-badge">1</div>
+              <div>
+                <h3>TikTok 视频链接自动补全</h3>
+                <p class="sub">已对接账号主页抓取，定时自动触发</p>
+              </div>
+            </div>
+            <ul>
+              <li><strong>自动启动：</strong>每 5 分钟扫描新链接，每 30 分钟刷新播放/点赞，GitHub Actions 云端兜底</li>
+              <li><strong>抓取账号主页：</strong>按表中 TikTok 账号逐一下滑主页，抓取最新视频标题、ID、发布时间</li>
+              <li><strong>标题/日期匹配：</strong>按「账号 + 标题相似度 72% + 发布日期 28%」打分，全局唯一分配</li>
+              <li><strong>写入飞书表：</strong>自动回填 TikTok 链接、状态、标题、播放量、点赞数；置信度不够留空</li>
+              <li><strong>报告结果：</strong>状态列显示「已补全 / 需人工确认 / 未找到」，提示列写原因和候选链接</li>
+            </ul>
+            <span class="status-pill">已上线 · 每日执行</span>
+          </div>
+          <div class="card-media">
+            <img src="images/tiktok_link_table.png" alt="TikTok 链接补全结果表格" />
           </div>
         </article>
       </div>
