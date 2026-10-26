@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AI 自动化实例集 · GMV Max 数据流</title>
-  <meta name="description" content="三个已落地的 AI 自动化实例：GMV Max 数据流、账户余额监控、创意脚本读取" />
+  <meta name="description" content="五个已落地的 AI 自动化实例：GMV Max 数据流、账户余额监控、创意脚本读取、TK 链接自动补全、口播脚本批量提取、达人库批量入库" />
   <style>
     :root {
       --bg: #030712;
@@ -429,7 +429,7 @@
 
   <header>
     <h1>AI 自动化实例集</h1>
-    <p>三个已落地的投放工作流 —— 从取数、监控到内容处理，每天自动跑</p>
+    <p>五个已落地的投放工作流 —— 从取数、监控到内容与达人管理，每天自动跑</p>
   </header>
 
   <nav class="toc">
@@ -437,6 +437,8 @@
     <a href="#balance"><b>02</b>账户余额监控</a>
     <a href="#script"><b>03</b>创意脚本读取</a>
     <a href="#tiktok"><b>04</b>TK 链接自动补全</a>
+    <a href="#koubo"><b>05</b>口播脚本批量提取</a>
+    <a href="#kol"><b>06</b>达人库批量入库</a>
   </nav>
 
   <div class="container">
@@ -737,6 +739,173 @@
           <span class="status-pill">已上线 · 每日执行</span>
           <div class="screenshot">
             <img src="images/tiktok_link_table.png" alt="TikTok 链接补全结果表格" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 实例 05：口播脚本批量提取 -->
+    <section class="case" id="koubo">
+      <div class="case-head">
+        <div class="case-index">实例 05</div>
+        <h2>口播脚本批量提取</h2>
+        <p>一次提交一批竞品视频链接，口播原文、中文翻译、品牌产品信息自动落成一张可检索的素材台账</p>
+      </div>
+
+      <div class="pipeline">
+        <div class="node">
+          <div class="node-icon">📥</div>
+          <div class="node-title">批量提交</div>
+          <div class="node-desc">一次粘贴一批视频链接</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🎬</div>
+          <div class="node-title">逐条采集</div>
+          <div class="node-desc">打开视频提取真实口播</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🌏</div>
+          <div class="node-title">翻译对照</div>
+          <div class="node-desc">生成口语化中文译文</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🏷️</div>
+          <div class="node-title">信息识别</div>
+          <div class="node-desc">品牌 / 产品 / 类型自动归类</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🗂️</div>
+          <div class="node-title">落表归档</div>
+          <div class="node-desc">8 列结构一次填齐</div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-badge">1</div>
+            <div>
+              <h3>信息自动落表</h3>
+              <p class="sub">从一条链接到一行完整台账，中间零人工</p>
+            </div>
+          </div>
+          <ul>
+            <li><strong>批量输入：</strong>一次提交几十条 TikTok 视频链接，无需逐条处理</li>
+            <li><strong>真实口播：</strong>提取的是视频里说出来的话，不是标题或简介</li>
+            <li><strong>中英对照：</strong>原文与译文同行存放，创意复盘时直接读</li>
+            <li><strong>结构化归档：</strong>时间 / 品牌 / 产品 / 产品类型 / 视频类型 / 主页链接 / 视频链接 / 脚本，8 列一次填齐</li>
+            <li><strong>自动归类：</strong>品牌与产品类型按链接与内容自动识别，落表即可按列筛选</li>
+          </ul>
+          <span class="status-pill">已上线 · 批量执行</span>
+          <div class="screenshot">
+            <img src="images/script_table_us.png" alt="口播脚本批量提取台账（中英对照）" />
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <hr class="divider" />
+
+    <!-- 实例 06：达人库批量入库 -->
+    <section class="case" id="kol">
+      <div class="case-head">
+        <div class="case-index">实例 06</div>
+        <h2>达人库批量入库</h2>
+        <p>几十张达人主页截图，一次变成结构化台账 —— 读数、查重、纠错、播报全自动</p>
+      </div>
+
+      <div class="pipeline">
+        <div class="node">
+          <div class="node-icon">🖼️</div>
+          <div class="node-title">截图投喂</div>
+          <div class="node-desc">二十多张主页截图一次给到</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🔍</div>
+          <div class="node-title">逐格读数</div>
+          <div class="node-desc">昵称 / 粉丝数 / 主页链接</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">🧹</div>
+          <div class="node-title">品类内查重</div>
+          <div class="node-desc">已在库的自动跳过</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">✍️</div>
+          <div class="node-title">写入台账</div>
+          <div class="node-desc">按产品归属分表写入</div>
+        </div>
+        <div class="node">
+          <div class="node-icon">📣</div>
+          <div class="node-title">播报核对</div>
+          <div class="node-desc">回读校验 + 结果播报</div>
+        </div>
+      </div>
+
+      <div class="cards">
+        <article class="card">
+          <div class="card-header">
+            <div class="card-badge">1</div>
+            <div>
+              <h3>批量截图 → 一键入库</h3>
+              <p class="sub">唯一的人工步骤：把截图发过来</p>
+            </div>
+          </div>
+          <ul>
+            <li><strong>输入：</strong>26 张达人主页截图，一次性处理</li>
+            <li><strong>提取：</strong>达人昵称、粉丝数、主页链接逐格读数</li>
+            <li><strong>查重：</strong>与库内同品类比对，已有的自动跳过，不跨品类误判</li>
+            <li><strong>写入：</strong>按产品归属分表落位，粉丝数保留完整整数</li>
+            <li><strong>行数校验：</strong>截图数与提取行数逐张核对，对不上先停下确认</li>
+          </ul>
+          <span class="status-pill">已上线 · 按批次执行</span>
+          <div class="screenshot">
+            <img src="images/kol_input_req.png" alt="批量截图入库需求" />
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-badge">2</div>
+            <div>
+              <h3>入库播报 · 回读核对</h3>
+              <p class="sub">跑完先对账，再报数</p>
+            </div>
+          </div>
+          <ul>
+            <li><strong>全程留痕：</strong>提取 200 条 → 跳过已入库 2 条 → 新建 198 条，每一步都有数</li>
+            <li><strong>回读校验：</strong>写完回读比对，198/198 命中，粉丝数 0 处不符</li>
+            <li><strong>总量对账：</strong>表内总量与增量自洽（1534 条，其中牙膏 563 条）</li>
+            <li><strong>播报送达：</strong>结果自动推送到飞书，不看表也知道跑了什么</li>
+          </ul>
+          <span class="status-pill">已上线 · 自动播报</span>
+          <div class="screenshot">
+            <img src="images/kol_input_report.png" alt="入库播报统计" />
+          </div>
+          <div class="screenshot">
+            <img src="images/kol_input_base.png" alt="达人库多维表入库结果" />
+          </div>
+        </article>
+
+        <article class="card">
+          <div class="card-header">
+            <div class="card-badge">3</div>
+            <div>
+              <h3>AI 读数自检与纠错</h3>
+              <p class="sub">识别不可靠时，主动放大复核并留痕</p>
+            </div>
+          </div>
+          <ul>
+            <li><strong>问题发现：</strong>截图字号偏小时，不硬读 —— 逐条放大 11~24 倍复核</li>
+            <li><strong>主动纠错：</strong>自查出 11 处读数误差（漏字符、下划线、双写），全部修正</li>
+            <li><strong>留痕对照：</strong>读错什么、正确是什么、错在哪，一张对照表说清楚</li>
+            <li><strong>机制沉淀：</strong>同类截图后续批次直接套用该复核规则</li>
+          </ul>
+          <span class="status-pill">已上线 · 质检留痕</span>
+          <div class="screenshot">
+            <img src="images/kol_input_fix.png" alt="读数纠错对照表" />
           </div>
         </article>
       </div>
